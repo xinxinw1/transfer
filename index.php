@@ -2,6 +2,23 @@
 <?php session_start(); ?>
 <?php $ver = "0.1"; ?>
 <?php
+function reload(){
+  header("Location: .");
+  die();
+}
+
+if (isset($_SESSION['mess'])){
+  $mess = $_SESSION['mess'];
+  unset($_SESSION['mess']);
+}
+if (isset($_SESSION['mess1'])){
+  $mess1 = $_SESSION['mess1'];
+  unset($_SESSION['mess1']);
+}
+if (isset($_SESSION['mess2'])){
+  $mess2 = $_SESSION['mess2'];
+  unset($_SESSION['mess2']);
+}
 error_reporting(0);
 if (!file_exists("authinfo.php"))$mess = "authinfo.php doesn't exist";
 else {
@@ -15,8 +32,10 @@ else {
     $pass = $_POST['pass'];
     if (!file_exists($passfile) || password_verify($pass, file_get_contents($passfile))){
       $_SESSION['transfer-priv'] = "yes";
+      reload();
     } else {
-      $mess = "Incorrect password";
+      $_SESSION['mess'] = "Incorrect password";
+      reload();
     }
   }
   if (isset($_SESSION['transfer-priv'])){
@@ -24,18 +43,17 @@ else {
       $pass = $_POST['newpass'];
       if ($pass == ""){
         unlink($passfile);
-        $mess1 = "Unset password";
-        $nopass = true;
+        $_SESSION['mess1'] = "Unset password";
+        reload();
       } else {
         file_put_contents($passfile, password_hash($pass, PASSWORD_DEFAULT));
-        $mess1 = "Changed password";
-        if (isset($nopass))unset($nopass);
+        $_SESSION['mess1'] = "Changed password";
+        reload();
       }
     }
     if (isset($_GET['logout'])){
       session_destroy();
-      header("Location: .");
-      die();
+      reload();
     }
     
     $link = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
@@ -46,92 +64,75 @@ else {
         $name = mysqli_real_escape_string($link, $_FILES['file']['name']);
         $tmp = $_FILES['file']['tmp_name'];
         $err = $_FILES['file']['error'];
-        
-        $ok = true;
         if ($err != 0){
-          $mess1 = "File upload error: $err";
-          $ok = false;
+          $_SESSION['mess1'] = "File upload error: $err";
+          reload();
         }
-        if ($ok){
-          $sql = "INSERT INTO transfer (name) VALUES ('$name')";
-          if (!mysqli_query($link, $sql)){
-            $mess1 = "Couldn't insert data into database: " . mysqli_error($link);
-            $ok = false;
+        $sql = "INSERT INTO transfer (name) VALUES ('$name')";
+        if (!mysqli_query($link, $sql)){
+          $_SESSION['mess1'] = "Couldn't insert data into database: " . mysqli_error($link);
+          reload();
+        }
+        $id = mysqli_insert_id($link);
+        if (!is_dir("files/")){
+          if (!mkdir("files/")){
+            $_SESSION['mess1'] = "Couldn't make files directory";
+            reload();
           }
         }
-        if ($ok){
-          $id = mysqli_insert_id($link);
-          if (!is_dir("files/")){
-            if (!mkdir("files/")){
-              $mess1 = "Couldn't make files directory";
-              $ok = false;
-            }
-          }
+        if (!move_uploaded_file($tmp, "files/$id")){
+          $_SESSION['mess1'] = "Couldn't upload file";
+          reload();
         }
-        if ($ok){
-          if (!move_uploaded_file($tmp, "files/$id")){
-            $mess1 = "Couldn't upload file";
-            $ok = false;
-          }
-        }
-        if ($ok)$mess1 = "Uploaded successfully";
+        $_SESSION['mess1'] = "Uploaded successfully";
+        reload();
       }
       
       if (isset($_GET['getfile'])){
         $id = mysqli_real_escape_string($link, $_GET['getfile']);
         
-        $ok = true;
         $sql = "SELECT name FROM transfer WHERE id='$id'";
         if (!($result = mysqli_query($link, $sql))){
-          $mess2 = "Couldn't access database: " . mysqli_error($link);
-          $ok = false;
+          $_SESSION['mess2'] = "Couldn't access database: " . mysqli_error($link);
+          reload();
         }
-        if ($ok){
-          if (!($row = mysqli_fetch_assoc($result))){
-            $mess2 = "File doesn't exist";
-            $ok = false;
-          }
+        if (!($row = mysqli_fetch_assoc($result))){
+          $_SESSION['mess2'] = "File doesn't exist";
+          reload();
         }
-        if ($ok){
-          $name = $row['name'];
-          $file = "files/$id";
-          // http://stackoverflow.com/questions/7263923/how-to-force-file-download-with-php
-          header('Content-Type: application/octet-stream');
-          header("Content-Transfer-Encoding: Binary"); 
-          header("Content-disposition: attachment; filename=\"$name\"");
-          header('Content-Length: ' . filesize($file));
-          readfile($file);
-          die();
-        }
+        $name = $row['name'];
+        $file = "files/$id";
+        // http://stackoverflow.com/questions/7263923/how-to-force-file-download-with-php
+        header('Content-Type: application/octet-stream');
+        header("Content-Transfer-Encoding: Binary"); 
+        header("Content-disposition: attachment; filename=\"$name\"");
+        header('Content-Length: ' . filesize($file));
+        readfile($file);
+        die();
       }
       
       if (isset($_POST['deleteid'])){
         $id = mysqli_real_escape_string($link, $_POST['deleteid']);
         
-        $ok = true;
         $sql = "SELECT name FROM transfer WHERE id='$id'";
         if (!($result = mysqli_query($link, $sql))){
-          $mess2 = "Couldn't access database: " . mysqli_error($link);
-          $ok = false;
+          $_SESSION['mess2'] = "Couldn't access database: " . mysqli_error($link);
+          reload();
         }
-        if ($ok){
-          if (!($row = mysqli_fetch_assoc($result))){
-            $mess2 = "File doesn't exist";
-            $ok = false;
-          }
+        if (!($row = mysqli_fetch_assoc($result))){
+          $_SESSION['mess2'] = "File doesn't exist";
+          reload();
         }
-        if ($ok){
-          $name = $row['name'];
-          $sql = "DELETE FROM transfer WHERE id='$id'";
-          if (!mysqli_query($link, $sql)){
-            $mess2 = "Couldn't delete data from database: " . mysqli_error($link);
-            $ok = false;
-          }
+        
+        $name = $row['name'];
+        $sql = "DELETE FROM transfer WHERE id='$id'";
+        if (!mysqli_query($link, $sql)){
+          $_SESSION['mess2'] = "Couldn't delete data from database: " . mysqli_error($link);
+          reload();
         }
-        if ($ok){
-          unlink("files/$id");
-          $mess2 = "Deleted \"$name\"";
-        }
+        unlink("files/$id");
+        $_SESSION['mess2'] = "Deleted \"$name\"";
+        reload();
       }
       
       $sql = "SELECT date, name, id FROM transfer";
