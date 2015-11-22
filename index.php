@@ -1,6 +1,6 @@
 <?php header("Cache-Control: no-cache"); ?>
 <?php session_start(); ?>
-<?php $ver = "0.1"; ?>
+<?php $ver = "1.0.0"; ?>
 <?php
 function reload(){
   header("Location: .");
