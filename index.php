@@ -1,6 +1,6 @@
 <?php header("Cache-Control: no-cache"); ?>
 <?php session_start(); ?>
-<?php $ver = "1.0.0"; ?>
+<?php $ver = "1.1.0"; ?>
 <?php
 function reload(){
   header("Location: .");
@@ -153,18 +153,15 @@ else {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
   * {margin: 0; padding: 0; border: 0; font-family: "Courier New", "DejaVu Sans Mono", monospace;}
-  #main {margin: 10px; margin-right: 16px;}
+  #cont {width: 100%; min-width: 460px;}
+  #main {padding: 10px;}
   h1, h2, p {margin-bottom: 10px;}
-  h1 {font-size: 25px}
+  h1 {font-size: 25px; width: 100%;}
   input {border: 1px solid #000; height: 18px; width: 218px; padding: 1px 2px;}
   input[type=submit] {background-color: #F1EFEB; padding: 1px 10px; width: 70px; height: 22px;}
   input[type=submit]:hover {background-color: #E6E3DE;}
   input[type=file] {border: 0; padding: 0; height: 22px; width: 224px;}
   a {color: #005ec8;}
-  
-  span.buf {display: inline-block; height: 1px; width: 5px;}
-  
-  table {border-collapse: collapse; vertical-align: middle;}
   
   .table > div, .table > form {display: table-row; vertical-align: middle;}
   .table > div > div, .table > form > div {display: table-cell;}
@@ -173,7 +170,6 @@ else {
   .table.border > div > div:last-child, .table.border > form > div:last-child {border-right: 1px solid #000;}
   .table.border > div:last-child > div, .table.border > form:last-child > div {border-bottom: 1px solid #000;}
   
-  .other {display: table;}
   .other > form > div {padding-left: 5px; padding-bottom: 10px; line-height: 22px;}
   .other > form > div:first-child {padding-left: 0;}
   
@@ -184,51 +180,53 @@ else {
 </head>
 
 <body>
-  <div id="main">
-    <h1>File Transfer <?php echo $ver ?><?php if (isset($_SESSION['transfer-priv']) && !isset($nopass)){ ?> | <a href="?logout=true">Logout</a><?php } ?></h1>
-    <?php if (isset($_SESSION['transfer-priv'])){ ?>
+  <div id="cont">
+    <div id="main">
+      <h1>File Transfer <?php echo $ver ?><?php if (isset($_SESSION['transfer-priv']) && !isset($nopass)){ ?> | <a href="?logout=true">Logout</a><?php } ?></h1>
+      <?php if (isset($_SESSION['transfer-priv'])){ ?>
+        <div class="table other">
+          <form method="post">
+            <div>New password:</div>
+            <div><input type="password" name="newpass"></div>
+            <div><input type="submit" value="Set"></div>
+          </form>
+          <form method="post" enctype="multipart/form-data">
+            <div>Upload:</div>
+            <div><input type="file" name="file"></div>
+            <div><input type="submit" name="upload" value="Upload"></div>
+          </form>
+        </div>
+        <?php if (isset($mess1)){ ?><p><?php echo $mess1 ?></p><?php } ?>
+        <h2>Uploaded Files</h2>
+        <?php if (isset($mess2)){ ?><p><?php echo $mess2 ?></p><?php } ?>
+        <div class="table border results">
+          <?php
+          if (isset($result)){
+            while ($row = mysqli_fetch_assoc($result)){
+          ?>
+          <form method="post" onsubmit="if (confirm('Are you sure you want to delete ' + this.deletename.value + ', id ' + this.deleteid.value + '?'))return true; else return false;">
+            <div><?php echo $row["id"] ?></div>
+            <div><?php echo $row["date"] ?></div>
+            <div><a href="?getfile=<?php echo $row["id"] ?>"><?php echo $row["name"] ?></a></div>
+            <div><input type="hidden" name="deleteid" value="<?php echo $row["id"] ?>"><input type="hidden" name="deletename" value="<?php echo $row["name"] ?>"><input type="submit" value="Delete"></div>
+          </form>
+          <?php
+            }
+            mysqli_free_result($result);
+          }
+          ?>
+        </div>
+      <?php } else { ?>
       <div class="table other">
         <form method="post">
-          <div>New password:</div>
-          <div><input type="password" name="newpass"></div>
-          <div><input type="submit" value="Set"></div>
-        </form>
-        <form method="post" enctype="multipart/form-data">
-          <div>Upload:</div>
-          <div><input type="file" name="file"></div>
-          <div><input type="submit" name="upload" value="Upload"></div>
+          <div>Password:</div>
+          <div><input type="password" name="pass"></div>
+          <div><input type="submit" value="Login"></div>
         </form>
       </div>
-      <?php if (isset($mess1)){ ?><p><?php echo $mess1 ?></p><?php } ?>
-      <h2>Uploaded Files</h2>
-      <?php if (isset($mess2)){ ?><p><?php echo $mess2 ?></p><?php } ?>
-      <div class="table border results">
-        <?php
-        if (isset($result)){
-          while ($row = mysqli_fetch_assoc($result)){
-        ?>
-        <form method="post" onsubmit="if (confirm('Are you sure you want to delete ' + this.deletename.value + ', id ' + this.deleteid.value + '?'))return true; else return false;">
-          <div><?php echo $row["id"] ?></div>
-          <div><?php echo $row["date"] ?></div>
-          <div><a href="?getfile=<?php echo $row["id"] ?>"><?php echo $row["name"] ?></a></div>
-          <div><input type="hidden" name="deleteid" value="<?php echo $row["id"] ?>"><input type="hidden" name="deletename" value="<?php echo $row["name"] ?>"><input type="submit" value="Delete"></div>
-        </form>
-        <?php
-          }
-          mysqli_free_result($result);
-        }
-        ?>
-      </div>
-    <?php } else { ?>
-    <div class="table other">
-      <form method="post">
-        <div>Password:</div>
-        <div><input type="password" name="pass"></div>
-        <div><input type="submit" value="Login"></div>
-      </form>
+      <?php } ?>
+      <?php if (isset($mess)){ ?><p><?php echo $mess ?></p><?php } ?>
     </div>
-    <?php } ?>
-    <?php if (isset($mess)){ ?><p><?php echo $mess ?></p><?php } ?>
   </div>
 </body>
 
