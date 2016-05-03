@@ -1,0 +1,31 @@
+* {margin: 0; padding: 0; border: 0; font-family: "Courier New", "DejaVu Sans Mono", monospace;}
+
+#cont {width: 100%; min-width: 460px;}
+#main {padding: 10px;}
+h1, h2, p {margin-bottom: 10px;}
+h1 {font-size: 25px; width: 100%;}
+input {border: 1px solid #000; height: 18px; width: 218px; padding: 1px 2px;}
+input[type=submit] {background-color: #F1EFEB; padding: 1px 10px; width: 70px; height: 22px;}
+input[type=submit]:hover {background-color: #E6E3DE;}
+input[type=file] {border: 0; padding: 0; height: 22px; width: 224px;}
+a {color: #005ec8;}
+
+.table > div, .table > form {display: table-row; vertical-align: middle;}
+.table > div > div, .table > form > div {display: table-cell;}
+
+.table.border > div > div, .table.border > form > div {border-left: 1px solid #000; border-top: 1px solid #000;}
+.table.border > div > div:last-child, .table.border > form > div:last-child {border-right: 1px solid #000;}
+.table.border > div:last-child > div, .table.border > form:last-child > div {border-bottom: 1px solid #000;}
+
+.other > form > div {padding-left: 5px; padding-bottom: 10px; line-height: 22px;}
+.other > form > div:first-child {padding-left: 0;}
+
+.results {margin-bottom: 10px}
+.results > form > div {padding: 5px 7px;}
+.results > form > div:last-child {padding: 5px;}
+
+#fine-uploader {margin-bottom: 10px;}
+
+.xuploader {min-height: 0px !important;}
+.xuploader:before {top: 30% !important;}
+.xuploader .qq-upload-success {display: none;}
