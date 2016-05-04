@@ -36,7 +36,13 @@ class UploadHandler {
         $targetFolder = $this->chunksFolder.DIRECTORY_SEPARATOR.$uuid;
         $totalParts = isset($_REQUEST['qqtotalparts']) ? (int)$_REQUEST['qqtotalparts'] : 1;
         
-        if ($this->isInaccessible($uploadDirectory)){
+        if (!is_dir($uploadDirectory)){
+            if (!mkdir($uploadDirectory)){
+                return array('error' => "Server error. Couldn't create uploads directory.");
+            }
+        }
+        
+        if (!is_writable($uploadDirectory)){
             return array('error' => "Server error. Uploads directory isn't writable");
         }
         
@@ -90,8 +96,14 @@ class UploadHandler {
             $size = max(1, $this->sizeLimit / 1024 / 1024) . 'M';
             return array('error'=>"Server error. Increase post_max_size and upload_max_filesize to ".$size);
         }
+        
+        if (!is_dir($uploadDirectory)){
+            if (!mkdir($uploadDirectory)){
+                return array('error' => "Server error. Couldn't create uploads directory.");
+            }
+        }
 
-        if ($this->isInaccessible($uploadDirectory)){
+        if (!is_writable($uploadDirectory)){
             return array('error' => "Server error. Uploads directory isn't writable");
         }
 
@@ -135,15 +147,23 @@ class UploadHandler {
 
             $chunksFolder = $this->chunksFolder;
             $partIndex = (int)$_REQUEST['qqpartindex'];
+            
+            if (!is_dir($chunksFolder)){
+                if (!mkdir($chunksFolder)){
+                    return array('error' => "Server error. Couldn't create chunks directory.");
+                }
+            }
 
-            if ($this->isInaccessible($chunksFolder)){
+            if (!is_writable($chunksFolder)){
                 return array('error' => "Server error. Chunks directory isn't writable");
             }
 
             $targetFolder = $this->chunksFolder.DIRECTORY_SEPARATOR.$uuid;
 
-            if (!file_exists($targetFolder)){
-                mkdir($targetFolder);
+            if (!is_dir($targetFolder)){
+                if (!mkdir($targetFolder)){
+                    return array('error' => "Server error. Couldn't create chunks uuid directory.");
+                }
             }
 
             $target = $targetFolder.'/'.$partIndex;
