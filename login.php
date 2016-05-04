@@ -1,5 +1,5 @@
 <?php session_start(); ?>
-<?php $ver = "2.1.0"; ?>
+<?php $ver = "2.1.1"; ?>
 <?php require "functions.php"; ?>
 <?php
 if (isset($_SESSION['transfer-priv'])){

@@ -22,7 +22,7 @@ a {color: #005ec8;}
 
 .results {margin-bottom: 10px}
 .results > form > div {padding: 5px 7px;}
-.results > form > div:last-child {padding: 5px;}
+.results > form > div.with-button {padding: 5px;}
 
 #fine-uploader {margin-bottom: 10px;}
 
