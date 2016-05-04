@@ -153,10 +153,10 @@ if (isset($link)){
     chunking: {
       enabled: true,
       concurrent: {
-          enabled: true
+        enabled: true
       },
       success: {
-          endpoint: "upload?done"
+        endpoint: "upload?done"
       }
     },
     resume: {
