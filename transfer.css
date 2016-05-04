@@ -5,8 +5,8 @@
 h1, h2, p {margin-bottom: 10px;}
 h1 {font-size: 25px; width: 100%;}
 input {border: 1px solid #000; height: 18px; width: 218px; padding: 1px 2px;}
-input[type=submit] {background-color: #F1EFEB; padding: 1px 10px; width: 70px; height: 22px;}
-input[type=submit]:hover {background-color: #E6E3DE;}
+input[type=submit], input[type=button] {background-color: #F1EFEB; padding: 1px 10px; min-width: 70px; width: auto; height: 22px;}
+input[type=submit]:hover, input[type=button]:hover {background-color: #E6E3DE;}
 input[type=file] {border: 0; padding: 0; height: 22px; width: 224px;}
 a {color: #005ec8;}
 
