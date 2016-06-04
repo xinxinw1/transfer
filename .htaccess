@@ -1,3 +1,5 @@
 RewriteEngine on
 RewriteRule ^([a-zA-Z0-9_-]+)$ $1.php
+RewriteRule ^get/([0-9]+)/.*$ get.php?id=$1
+RewriteRule ^preview/([0-9]+)/.*$ preview.php?id=$1
 Options All -Indexes

@@ -72,8 +72,8 @@ if (isset($link)){
           <form method="post" action="delete" onsubmit="if (confirm('Are you sure you want to delete ' + this.deletename.value + ', id ' + this.deleteid.value + '?'))return true; else return false;">
             <div><?php echo $row["id"] ?></div>
             <div><?php echo $row["date"] ?></div>
-            <div><a href="preview?id=<?php echo $row["id"] ?>"><?php echo $row["name"] ?></a></div>
-            <div class="with-button"><input type="button" onclick="location.href='get?id=<?php echo $row["id"] ?>'" value="Download"></div>
+            <div><a href="preview/<?php echo $row["id"] ?>/<?php echo $row["name"] ?>"><?php echo $row["name"] ?></a></div>
+            <div><a href="get/<?php echo $row["id"] ?>/<?php echo $row["name"] ?>">Download</a></div>
             <div class="with-button"><input type="hidden" name="deleteid" value="<?php echo $row["id"] ?>"><input type="hidden" name="deletename" value="<?php echo $row["name"] ?>"><input type="submit" value="Delete"></div>
           </form>
           <?php
