@@ -1,5 +1,4 @@
 <?php session_start(); ?>
-<?php $ver = "2.1.2"; ?>
 <?php require "functions.php"; ?>
 <?php
 if (isset($_SESSION['transfer-priv'])){
@@ -42,7 +41,7 @@ if (isset($_POST['pass'])){
 <html>
 
 <head>
-  <title>File Transfer <?php echo $ver ?></title>
+  <title>File Transfer</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="transfer.css" rel="stylesheet">
@@ -51,7 +50,7 @@ if (isset($_POST['pass'])){
 <body>
   <div id="cont">
     <div id="main">
-      <h1>File Transfer <?php echo $ver ?></h1>
+      <h1>File Transfer</h1>
       <div class="table other">
         <form method="post">
           <div>Password:</div>
