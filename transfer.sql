@@ -17,8 +17,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ourspe5_XinXin`
+-- Database: `transfer`
 --
+CREATE DATABASE IF NOT EXISTS `transfer` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+USE `transfer`;
 
 -- --------------------------------------------------------
 
@@ -26,7 +28,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `transfer`
 --
 
-CREATE TABLE `transfer` (
+CREATE TABLE IF NOT EXISTS `transfer` (
   `id` int(11) NOT NULL,
   `name` varchar(500) COLLATE utf8_unicode_ci NOT NULL,
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -54,3 +56,7 @@ ALTER TABLE `transfer`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+GRANT USAGE ON *.* TO 'transfer'@'localhost' IDENTIFIED BY PASSWORD '*D072C3281CDA2BF590A0FD05D91D2654869D44BF';
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON `transfer`.* TO 'transfer'@'localhost';
