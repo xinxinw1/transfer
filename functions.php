@@ -20,14 +20,17 @@ function connect_db(){
   return $link;
 }
 
-function check_login(){
+function has_password(){
   global $passfile;
-  
+  return file_exists($passfile) && 0 != filesize($passfile);
+}
+
+function check_login(){
   if (!isset($_SESSION['transfer-priv'])){
     redirect("login");
   }
   
-  $exists = file_exists($passfile);
+  $exists = has_password();
   
   if ($exists && isset($_SESSION['transfer-nopass'])){
     unset($_SESSION['transfer-priv']);

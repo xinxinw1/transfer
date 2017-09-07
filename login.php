@@ -21,7 +21,7 @@ if (isset($_SESSION['mess'])){
   unset($_SESSION['mess']);
 }
 
-if (!file_exists($passfile) || 0 == filesize($passfile)){
+if (!has_password()){
   $_SESSION['transfer-priv'] = true;
   redirect(".");
 }

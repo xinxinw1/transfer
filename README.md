@@ -13,5 +13,5 @@ $ vim /etc/php/php.ini
   - Set post_max_size and upload_max_filesize to 20M
 $ touch transfer-pass
 $ mkdir chunks files
-$ chown www-data:www-data transfer-pass chunks/ files/
+$ sudo chown www-data:www-data transfer-pass chunks/ files/
 ```
