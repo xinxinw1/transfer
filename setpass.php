@@ -4,7 +4,7 @@
 if (isset($_POST['newpass'])){
   $pass = $_POST['newpass'];
   if ($pass == ""){
-    unlink($passfile);
+    file_put_contents($passfile, "");
     $_SESSION['mess1'] = "Unset password";
     redirect(".");
   } else {
